@@ -7,10 +7,12 @@ config.read('dwh.cfg')
 
 # DROP TABLES
 
+'''IF THE TABLE IS ALREADY EXISTED THEN IT WILL BE DROPPED USING THIS CODE'''
+
 staging_events_table_drop = "DROP TABLE IF EXISTS staging_events;"
 staging_songs_table_drop = "DROP TABLE IF EXISTS staging_songs;"
 songplay_table_drop = "DROP TABLE IF EXISTS songplay;"
-user_table_drop = "DROP TABLE IF EXISTS user;"
+user_table_drop = "DROP TABLE IF EXISTS users;"
 song_table_drop = "DROP TABLE IF EXISTS song;"
 artist_table_drop = "DROP TABLE IF EXISTS artist;"
 time_table_drop = "DROP TABLE IF EXISTS time;"
@@ -68,7 +70,7 @@ songplay_table_create = ("""
 """)
 
 user_table_create = ("""
-    CREATE TABLE IF NOT EXISTS user(
+    CREATE TABLE IF NOT EXISTS users(
         userId int NOT NULL,
         firstName text NOT NULL,
         lastName text SORTKEY,
@@ -93,7 +95,7 @@ artist_table_create = ("""
         name text NOT NULL SORTKEY,
         latitude numeric,
         longitude numeric            
-        )distyle all;
+        )
 """)
 
 time_table_create = ("""
@@ -104,10 +106,12 @@ time_table_create = ("""
         month int,
         year int,
         weekday int 
-        )distyle all;
+        )diststyle all;
 """)
 
 # STAGING TABLES
+
+'''THE STAGING TABLES ARE COPYIED DATA FROM THE S3 BUCKECT IN AWS'''
 
 staging_events_copy = ("""
         copy staging_events from {} IAM_ROLE '{}' region 'us-east-1' JSON{}
@@ -118,6 +122,8 @@ staging_songs_copy = ("""
 """).format(config['S3']['LOG_DATA'], config['IAM_ROLE']['ARN'])
 
 # FINAL TABLES
+
+'''THE VALUES ARE INSERTED INTO SEVERAL TABLES FROM THE COPYIED TABLE'''
 
 songplay_table_insert = ("""
         INSERT INTO songplay(start_time, userId, level, song_id, artist_id, sessionId, location, user_agent)
@@ -134,7 +140,7 @@ songplay_table_insert = ("""
 """)
 
 user_table_insert = ("""
-    INSERT INTO user(userId, firstName, lastName, gender, level)
+    INSERT INTO users(userId, firstName, lastName, gender, level)
     SELECT DISTINCT userId, first_name, last_name, gender, level from staging_events
     WHERE userId is NOT NULL AND 
     firstName is NOT NULL AND 
