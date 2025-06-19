@@ -57,11 +57,11 @@ songplay_table_create = ("""
     CREATE TABLE IF NOT EXISTS songplay( 
         songplay_id int identity(0,1) PRIMARY KEY,
         start_time timestamp SORTKEY,
-        user_id int NOT NULL,
+        userId int NOT NULL,
         level text NOT NULL,
         song_id int DISTKEY,
         artist_id varchar,
-        session_id int NOT NULL,
+        sessionId int NOT NULL,
         location varchar,
         user_agent varchar
         );
@@ -69,9 +69,9 @@ songplay_table_create = ("""
 
 user_table_create = ("""
     CREATE TABLE IF NOT EXISTS user(
-        user_id int NOT NULL,
-        first_name text NOT NULL,
-        last_name text SORTKEY,
+        userId int NOT NULL,
+        firstName text NOT NULL,
+        lastName text SORTKEY,
         gender char NOT NULL,
         level text NOT NULL
         );
@@ -120,13 +120,13 @@ staging_songs_copy = ("""
 # FINAL TABLES
 
 songplay_table_insert = ("""
-        INSERT INTO songplays (start_time, user_id, level, song_id, artist_id, session_id, location, user_agent)
+        INSERT INTO songplay(start_time, userId, level, song_id, artist_id, sessionId, location, user_agent)
         SELECT DISTINCT timestamp 'epoch' + ts / 1000 * interval '1 second' AS start_time,
-            user_id,
+            userId,
             level,
             song_id,
             artist_id,
-            session_id,
+            sessionId,
             location,
             user_agent
         FROM staging_events, staging_songs
@@ -134,10 +134,10 @@ songplay_table_insert = ("""
 """)
 
 user_table_insert = ("""
-    INSERT INTO user(userId, first_name, last_name, gender, level)
+    INSERT INTO user(userId, firstName, lastName, gender, level)
     SELECT DISTINCT userId, first_name, last_name, gender, level from staging_events
     WHERE userId is NOT NULL AND 
-    first_name is NOT NULL AND 
+    firstName is NOT NULL AND 
     gender is NOT NULL AND
     level is NOT NULL;
 """)
