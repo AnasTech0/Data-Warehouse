@@ -11,9 +11,9 @@ staging_events_table_drop = "DROP TABLE IF EXISTS staging_events;"
 staging_songs_table_drop = "DROP TABLE IF EXISTS staging_songs;"
 songplay_table_drop = "DROP TABLE IF EXISTS songplay;"
 user_table_drop = "DROP TABLE IF EXISTS user;"
-song_table_drop = "DROP TABLE IF EXISTS song"
-artist_table_drop = "DROP TABLE IF EXISTS artist"
-time_table_drop = "DROP TABLE IF EXISTS time"
+song_table_drop = "DROP TABLE IF EXISTS song;"
+artist_table_drop = "DROP TABLE IF EXISTS artist;"
+time_table_drop = "DROP TABLE IF EXISTS time;"
 
 # CREATE TABLES
 
@@ -36,7 +36,7 @@ staging_events_table_create= ("""
         status int,
         ts bigint,
         userAgent varchar,
-        userId varchar
+        userId varchar);
 """)
 
 staging_songs_table_create = ("""
@@ -50,7 +50,7 @@ staging_songs_table_create = ("""
         latitude float,
         longitude float,
         location varchar,
-        number_of_song int
+        number_of_song int);
 """)
 
 songplay_table_create = ("""
