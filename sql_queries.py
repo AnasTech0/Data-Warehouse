@@ -41,16 +41,16 @@ staging_events_table_create= ("""
 
 staging_songs_table_create = ("""
     CREATE TABLE IF NOT EXISTS staging_songs (
-        song_id varachar NOT NULL,
-        title varchar NOT NULL,
-        duration float,
-        year smallint,
+        num_songs int,
         artist_id varchar,
-        artist_name varchar,
         latitude float,
         longitude float,
         location varchar,
-        number_of_song int);
+        name varchar,
+        song_id varchar,
+        title varchar,
+        duration float,
+        year int);
 """)
 
 songplay_table_create = ("""
@@ -134,9 +134,9 @@ songplay_table_insert = ("""
 """)
 
 user_table_insert = ("""
-    INSERT INTO user(user_id, first_name, last_name, gender, level)
-    SELECT DISTINCT user_id, first_name, last_name, gender, level from user
-    WHERE user_id is NOT NULL AND 
+    INSERT INTO user(userId, first_name, last_name, gender, level)
+    SELECT DISTINCT userId, first_name, last_name, gender, level from staging_events
+    WHERE userId is NOT NULL AND 
     first_name is NOT NULL AND 
     gender is NOT NULL AND
     level is NOT NULL;
@@ -144,7 +144,7 @@ user_table_insert = ("""
 
 song_table_insert = ("""
     INSERT INTO song(song_id, title, artist_id, year, duration)
-    SELECT DISTINCT song_id, title, artist_id, year, duration from song
+    SELECT DISTINCT song_id, title, artist_id, year, duration from staging_songs
     WHERE song_id is NOT NULL AND
     title is NOT NULL AND
     duration is NOT NULL;
@@ -152,7 +152,7 @@ song_table_insert = ("""
 
 artist_table_insert = ("""
     INSERT INTO artist(artist_id, name, latitude, longitude)
-    SELECT DISTINCT artist_id, name, latitude, longitude
+    SELECT DISTINCT artist_id, name, latitude, longitude from staging_songs
     WHERE artist_id is NOT NULL AND name is NOT NULL;
 """)
 
