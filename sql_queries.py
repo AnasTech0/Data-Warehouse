@@ -21,12 +21,12 @@ time_table_drop = "DROP TABLE IF EXISTS time;"
 
 staging_events_table_create= ("""
     CREATE TABLE IF NOT EXISTS staging_events (
-        artist varchar NOT NULL,
+        artist varchar,
         auth varchar,
-        firstName varchar,
+        firstName text,
         gender char,
         itemInSession int,
-        lastName varchar,
+        lastName text,
         length float,
         level varchar,
         location varchar,
@@ -45,8 +45,8 @@ staging_songs_table_create = ("""
     CREATE TABLE IF NOT EXISTS staging_songs (
         num_songs int,
         artist_id varchar,
-        latitude float,
-        longitude float,
+        latitude numeric,
+        longitude numeric,
         location varchar,
         name varchar,
         song_id varchar,
@@ -57,7 +57,7 @@ staging_songs_table_create = ("""
 
 songplay_table_create = ("""
     CREATE TABLE IF NOT EXISTS songplay( 
-        songplay_id int identity(0,1) PRIMARY KEY,
+        songplay_id int identity(0,1) ,
         start_time timestamp SORTKEY,
         userId int NOT NULL,
         level text NOT NULL,
@@ -65,7 +65,7 @@ songplay_table_create = ("""
         artist_id varchar,
         sessionId int NOT NULL,
         location varchar,
-        user_agent varchar
+        userAgent varchar
         );
 """)
 
@@ -75,13 +75,13 @@ user_table_create = ("""
         firstName text NOT NULL,
         lastName text SORTKEY,
         gender char NOT NULL,
-        level text NOT NULL
+        level varchar NOT NULL
         );
 """)
 
 song_table_create = ("""
     CREATE TABLE IF NOT EXISTS song(
-        song_id varchar NOT NULL,
+        song_id int NOT NULL,
         title varchar NOT NULL,
         artist_id varchar,
         year int SORTKEY,
@@ -135,7 +135,7 @@ songplay_table_insert = ("""
             sessionId,
             location,
             user_agent
-        FROM staging_events, staging_songs
+        FROM staging_events join staging_songs on staging_events.song = staging_songs.title
         WHERE staging_events.page = 'NextSong';
 """)
 
