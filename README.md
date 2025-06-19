@@ -10,3 +10,17 @@ Project: Data Warehouse
 4. Then the Final tables values are retreived from the staging tables.
 
 5. Queries can be performed on the redshift query editors.
+
+FILE USED:
+1. sql_queries.py
+2. create_tables.py
+3. etl.py
+4. dwh.cfg (For configuration)
+
+STEPS TO FOLLOW:
+
+1. Write necessary queries to create, drop, insert datas in sql_queries.py
+2. Run the file to connect to Redshift cluster Database.
+3. To create the tables, Run the create_tables.py
+4. To perform etl process (i.e) to load data to staging table, run etl.py
+5. And Queries can be performed on Redshift query editors.
