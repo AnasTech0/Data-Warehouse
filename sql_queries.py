@@ -114,12 +114,19 @@ time_table_create = ("""
 '''THE STAGING TABLES ARE COPYIED DATA FROM THE S3 BUCKECT IN AWS'''
 
 staging_events_copy = ("""
-        copy staging_events from {} IAM_ROLE '{}' region 'us-east-1' JSON{}
-""").format(config['S3']['LOG_DATA'], config['IAM_ROLE']['ARN'], config['S3']['LOG_JSONPATH'])
+    copy staging_events from {data}
+    credentials 'aws_iam_role={role}'
+    region      'us-west-1'
+    format       as JSON {path}
+    timeformat   as 'epochmillisecs'
+""").format(data=LOG_DATA, role=IAM_ROLE, path=LOG_PATH)
 
 staging_songs_copy = ("""
-        copy staging_songs from {} IAM_ROLE '{}' region 'us-east-1' JSON 'auto'
-""").format(config['S3']['LOG_DATA'], config['IAM_ROLE']['ARN'])
+    copy staging_songs from {data}
+    credentials 'aws_iam_role={role}'
+    region      'us-west-1'
+    format       as JSON 'auto'
+""").format(data=SONG_DATA, role=IAM_ROLE)
 
 # FINAL TABLES
 
